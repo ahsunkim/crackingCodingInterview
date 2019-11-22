@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 // 1.1  Is Unique - Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
 
 function isUnique(str) {
@@ -74,11 +76,107 @@ console.log(twoStringsPermutation('history', 'hertory')); // expect false
 
 // 1.3 URLify: Write a method to replace all spaces in a string with '%20.' You may assume that the string has sufficient space at the end to hold the additional characters and that you are given the "true" length of the string. (Note: If implementing in Java, please use a character array so that you can perform this operation in place.)
 
+function urlify(str) {
+  return str.split(' ').join('%20');
+}
 
+console.log(urlify('hello world this is Ahsun')); //expect 'hello%20world%20this%20is%20Ahsun'
 
 // 1.4 Palindrome Permutation: Given a string, write a function to check if it as a permutation of a palindrome. A palindrome is a word or phrase that is the same forwards and backwards. A permutation is a rearrangement of letters. The palindrome does not need to be limited to just dictionary words.
 
+function palindromePermutation(str) {
+  let strDict = {};
+  for (let i = 0; i < str.length; i++) {
+    if (strDict[str[i]] === undefined) {
+      strDict[str[i]] = 1;
+    } else {
+      strDict[str[i]] += 1;
+    }
+  }
+  let strDictKeys = Object.keys(strDict);
+  let singleCharFound = false;
+  for (let i = 0; i < strDictKeys.length; i++) {
+    if (strDict[strDictKeys[i]] % 2 === 1) {
+      if (str.length % 2 === 0) {
+        return false;
+      } else {
+        if (singleCharFound) {
+          return false;
+        } else {
+          singleCharFound = true;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+console.log(palindromePermutation('hey')); // expects false
+console.log(palindromePermutation('hih')); // expects true
+console.log(palindromePermutation('hihi')); // expects true
+
 // 1.5 One Away: There are three types of edits that can be performed on strings: insert a character, remove a character, or replace a character. Given two strings, write a function to check if it is one edit (or zero edits away).
+
+function editDetector(str1, str2) {
+  if (str1 === str2) {
+    return true;
+  }
+  if (str1.length - str2.length > 1 || str2.length - str1.length > 1) {
+    return false;
+  }
+
+  let editCount = 0;
+  let pointerOne = 0;
+  let pointerTwo = 0;
+  if (str1.length === str2.length) {
+    while (pointerOne < str1.length && pointerTwo < str2.length) {
+      if (str1[pointerOne] !== str2[pointerTwo]) {
+        editCount++;
+      }
+      pointerOne++;
+      pointerTwo++;
+      if (editCount > 1) {
+        return false;
+      }
+    }
+  }
+  if (str1.length > str2.length) {
+    while (pointerOne < str1.length && pointerTwo < str2.length) {
+      if (str1[pointerOne] !== str2[pointerTwo]) {
+        editCount++;
+      } else {
+        pointerTwo++;
+      }
+      pointerOne++;
+    }
+    if (editCount > 1) {
+      return false;
+    }
+  }
+  if (str1.length < str2.length) {
+    while (pointerOne < str1.length && pointerTwo < str2.length) {
+      if (str1[pointerOne] !== str2[pointerTwo]) {
+        editCount++;
+      } else {
+        pointerOne++;
+      }
+      pointerTwo++;
+    }
+    if (editCount > 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
+console.log(editDetector('hi', 'hi')); // expect true;
+console.log(editDetector('his', 'hi')); // expect true;
+console.log(editDetector('his', 'mi')); // expect false
+console.log(editDetector('him', 'his')); // expect true;
+console.log(editDetector('him', 'sym')); // expect false;
+console.log(editDetector('hi', 'his')); // expect true;
+console.log(editDetector('hi', 'shy')); // expect false;
+console.log(editDetector('hi', 'hihihihihi')); // expect false;
 
 // 1.6 String Compression: Implement a method to perform basic string compression using the counts of repeated characters. For example, the string aabcccccaaa would become a2b1c5a3. If the "compressed" string would not become smaller than the origina string, your method should return the original string. You can assume the string has only uppercase and lowercase letters (a - z).
 
